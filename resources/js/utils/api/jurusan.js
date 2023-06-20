@@ -1,7 +1,7 @@
 import axios from 'axios'
 import server from './main'
 
-const baseUrl = process.env.APP_URL
+const baseUrl = 'https://dev.jadwalpintarsmkn2palu.site'
 const endPoint= "api/v1/jurusan/"
 
 export default {
