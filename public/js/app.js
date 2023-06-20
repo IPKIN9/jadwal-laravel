@@ -19579,12 +19579,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   title: 'Tersimpan',
                   message: 'Berhasil menyimpan data ke database'
                 });
+                console.log(res);
               })["catch"](function (err) {
                 if (err.response) {
                   _utils_other_izitoast_js__WEBPACK_IMPORTED_MODULE_9__["default"].errorNotif(err.response.status);
                 } else {
                   _utils_other_izitoast_js__WEBPACK_IMPORTED_MODULE_9__["default"].errorNotif(900);
                 }
+                console.log(err);
               });
               _context.next = 12;
               break;

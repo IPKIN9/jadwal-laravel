@@ -185,6 +185,7 @@ const upsertPayload = async () => {
           title: 'Tersimpan',
           message: 'Berhasil menyimpan data ke database'
         })
+        console.log(res);
       })
       .catch((err) => {
         if (err.response) {
@@ -192,6 +193,7 @@ const upsertPayload = async () => {
         } else {
           IziToast.errorNotif(900)
         }
+        console.log(err);
       })
 
   } catch (err) {
