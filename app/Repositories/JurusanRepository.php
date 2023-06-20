@@ -49,7 +49,7 @@ class JurusanRepository implements JurusanInterface
       if (!$id) {
         $payload['created_at'] = Carbon::now();
         $payload['updated_at'] = Carbon::now();
-        $data = $this->jurusanModel->create($payload);
+        $data = $this->jurusanModel->insert($payload);
         $payloadList = array(
           'message' => 'success',
           'data'    => $data,
