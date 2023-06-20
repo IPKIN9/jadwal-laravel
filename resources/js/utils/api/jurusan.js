@@ -1,3 +1,4 @@
+import axios from 'axios'
 import server from './main'
 
 const baseUrl = process.env.APP_URL
@@ -11,7 +12,7 @@ export default {
   },
 
   upsert(payload) {
-    return server(baseUrl).post(endPoint, payload)
+    return axios.post(payload)
   },
 
   getById(id) {
