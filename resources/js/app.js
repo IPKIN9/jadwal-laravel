@@ -1,10 +1,10 @@
 require('./bootstrap');
 
 import { createApp } from 'vue'
-import Welcome from './components/Welcome'
+import Jurusan from './components/Jurusan'
 
 const app = createApp({})
 
-app.component('welcome', Welcome)
+app.component('jurusan', Jurusan)
 
 app.mount('#app')
