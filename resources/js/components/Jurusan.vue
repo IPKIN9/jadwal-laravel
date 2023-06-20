@@ -120,6 +120,7 @@ import BaseInput from './input/BaseInput.vue'
 import * as Yup from 'yup'
 import Loading from './child/Loading.vue'
 import SweetAlert from '../utils/other/sweetalert'
+import axios from 'axios';
 
 const loading = ref(false)
 /* Fungsi untuk mengambil data jurusan */
@@ -177,7 +178,8 @@ const upsertPayload = async () => {
 
     await payloadSchema.validate(payload, { abortEarly: false });
 
-    Jurusan.upsert(payload)
+    axios.post('https://dev.jadwalpintarsmkn2palu.site/api/v1/jurusan', payload)
+    // Jurusan.upsert(payload)
       .then((res) => {
         loading.value = false
         showHideModal({ type: '' })
