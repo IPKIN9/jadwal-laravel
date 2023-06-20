@@ -192,6 +192,7 @@ const upsertPayload = async () => {
         } else {
           IziToast.errorNotif(900)
         }
+        console.log(err);
       })
 
   } catch (err) {
