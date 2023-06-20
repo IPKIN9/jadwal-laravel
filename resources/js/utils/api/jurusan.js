@@ -12,7 +12,7 @@ export default {
   },
 
   upsert(payload) {
-    return axios.post(payload)
+    return axios.post(`${baseUrl}/${endPoint}`, payload)
   },
 
   getById(id) {
