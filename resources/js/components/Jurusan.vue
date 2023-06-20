@@ -178,7 +178,7 @@ const upsertPayload = async () => {
 
     await payloadSchema.validate(payload, { abortEarly: false });
 
-    axios.post('https://dev.jadwalpintarsmkn2palu.site/api/v1/jurusan', payload)
+    axios.post(`${process.env.APP_URL}/api/v1/jurusan`, payload)
     // Jurusan.upsert(payload)
       .then((res) => {
         loading.value = false
