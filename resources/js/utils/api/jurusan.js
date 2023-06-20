@@ -1,6 +1,6 @@
 import server from './main'
 
-const baseUrl = "http://127.0.0.1:8000"
+const baseUrl = "http://dev.jadwalpintarsmkn2palu.site/"
 const endPoint= "api/v1/jurusan/"
 
 export default {
