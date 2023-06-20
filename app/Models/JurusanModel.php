@@ -17,12 +17,12 @@ class JurusanModel extends Model
     public function scopesortered($query, $params)
     {
         if ($params['orderBy'] === 'created_at') {
-            return $query
-            ->orderBy('created_at', $params['sort']);
+            return $query->orderBy('created_at', $params['sort']);
         } else {
-            return $query
-            ->orderByRaw("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(" . $params['orderBy'] . ", ' ', -1), ' ', 1) AS UNSIGNED) " . $params['sort'])
-            ->orderByRaw("SUBSTRING_INDEX(" . $params['orderBy'] . ", ' ', -1) " . $params['sort']);
+            $orderBy = $params['orderBy'];
+            $sort = $params['sort'];
+            return $query->orderByRaw("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX($orderBy, ' ', -1), ' ', 1) AS UNSIGNED) $sort")
+                         ->orderByRaw("SUBSTRING_INDEX($orderBy, ' ', -1) $sort");
         }
     }
 
