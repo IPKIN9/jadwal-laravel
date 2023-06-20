@@ -187,6 +187,7 @@ const upsertPayload = async () => {
         })
       })
       .catch((err) => {
+        loading.value = false
         if (err.response) {
           IziToast.errorNotif(err.response.status)
         } else {
