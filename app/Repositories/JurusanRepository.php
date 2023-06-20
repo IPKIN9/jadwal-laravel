@@ -19,7 +19,7 @@ class JurusanRepository implements JurusanInterface
   public function getPayload($meta)
   {
     try {
-      $data = $this->jurusanModel->pagginateList($meta)->sortered($meta)->get();
+      $data = $this->jurusanModel->get();
       $payloadList = array(
         'message' => 'success',
         'data'    => $data,
