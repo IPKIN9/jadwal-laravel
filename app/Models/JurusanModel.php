@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class JurusanModel extends Model
 {
     use HasFactory;
+
     protected $table = 'jurusan';
-    protected $fillabel = [
+    protected $fillable = [
         'id', '_jurusan', 'created_at', 'updated_at'
     ];
 

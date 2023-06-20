@@ -17,8 +17,11 @@
         "vue-loader": "^17.0.1"
     },
     "dependencies": {
+        "izitoast": "^1.4.0",
         "moment": "^2.29.4",
+        "sweetalert2": "^11.7.12",
         "vue": "^3.2.36",
-        "vue-router": "^4.2.2"
+        "vue-router": "^4.2.2",
+        "yup": "^1.2.0"
     }
 }

@@ -1,6 +1,6 @@
 import server from './main'
 
-const baseUrl = "http://dev.jadwalpintarsmkn2palu.site/"
+const baseUrl = process.env.APP_URL
 const endPoint= "api/v1/jurusan/"
 
 export default {
