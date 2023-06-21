@@ -34,7 +34,7 @@ class JurusanController extends Controller
       '_jurusan' => 'required|min:2|max:150',
     ]);
 
-    $id = $payload->id || null;
+    $id = $payload->id | null;
     $payload = array(
       '_jurusan' => $payload->_jurusan
     );
