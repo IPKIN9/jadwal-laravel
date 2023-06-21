@@ -14,52 +14,60 @@
       <ul class="menu">
         <li class="sidebar-title">Menu</li>
 
-        <li class="sidebar-item">
-          <a href="#" class="sidebar-link">
+        <li class="sidebar-item" :class="getCurrentLocation('/') ? 'active' : ''">
+          <a href="/" class="sidebar-link">
             <i class="bi bi-grid-1x2-fill"></i>
             <span>Jadwal</span>
           </a>
         </li>
-        <li class="sidebar-item">
-          <a href="#" class="sidebar-link">
+        <li class="sidebar-item" :class="getCurrentLocation('/pangkat') ? 'active' : ''">
+          <a href="/pangkat" class="sidebar-link">
             <i class="bi bi-grid-1x2-fill"></i>
             <span>Pangkat</span>
           </a>
         </li>
-        <li class="sidebar-item">
-          <a href="#" class="sidebar-link">
+        <li class="sidebar-item" :class="getCurrentLocation('/jurusan') ? 'active' : ''">
+          <a href="/jurusan" class="sidebar-link">
             <i class="bi bi-grid-1x2-fill"></i>
             <span>Jurusan</span>
           </a>
         </li>
-        <li class="sidebar-item">
-          <a href="#" class="sidebar-link">
+        <li class="sidebar-item" :class="getCurrentLocation('/mapel') ? 'active' : ''">
+          <a href="/mapel" class="sidebar-link">
             <i class="bi bi-grid-1x2-fill"></i>
             <span>Mata Pelajaran</span>
           </a>
         </li>
-        <li class="sidebar-item">
-          <a href="#" class="sidebar-link">
+        <li class="sidebar-item" :class="getCurrentLocation('/kelas') ? 'active' : ''">
+          <a href="/kelas" class="sidebar-link">
             <i class="bi bi-grid-1x2-fill"></i>
             <span>Kelas</span>
           </a>
         </li>
-        <li class="sidebar-item">
-          <a href="#" class="sidebar-link">
+        <li class="sidebar-item" :class="getCurrentLocation('/guru') ? 'active' : ''">
+          <a href="/guru" class="sidebar-link">
             <i class="bi bi-grid-1x2-fill"></i>
             <span>Guru</span>
           </a>
         </li>
-        <li class="sidebar-item">
-          <a href="#" class="sidebar-link">
+        <li class="sidebar-item" :class="getCurrentLocation('/report') ? 'active' : ''">
+          <a href="/report" class="sidebar-link">
             <i class="fa-solid fa-download"></i>
             <span>Export</span>
           </a>
         </li>
       </ul>
     </div>
+    <div style="margin-top: 230px;" class="text-center">
+      <BaseButton class="btn-danger rounded">Logout <i class="fas fa-power-off"></i></BaseButton>
+    </div>
   </div>
 </template>
 
 <script setup>
+import BaseButton from '../input/BaseButton.vue';
+
+const getCurrentLocation = (route) => {
+  return window.location.pathname == route
+}
 </script>
