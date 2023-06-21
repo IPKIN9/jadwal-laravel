@@ -335,7 +335,6 @@ const insertSchedule = async (jam_masuk, jam_keluar, idSchedule) => {
 
     axios.post(`/api/v1/detail/jadwal`, schedulePayload)
     .then((res) => {
-      console.log(res.data);
       showHideModal({ type: '' })
       IziToast.successNotif({
         title: 'Tersimpan',
@@ -343,7 +342,7 @@ const insertSchedule = async (jam_masuk, jam_keluar, idSchedule) => {
       })
       getCalendar()
       clearSchdule()
-
+ 
       scheduleError.value = []
     })
     .catch((err) => {
