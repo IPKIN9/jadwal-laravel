@@ -213,17 +213,17 @@ const payload = reactive({
 const pangkatError = ref('');
 
 const upsertPayload = async () => {
-  loading.value = true
   try {
     const payloadSchema = Yup.object().shape({
       _pangkat: Yup.string()
-        .required('Inputan harus diisi')
-        .min(2, 'Inputan minimal terdiri dari 2 karakter')
-        .max(150, 'Inputan maksimal terdiri dari 150 karakter'),
+      .required('Inputan harus diisi')
+      .min(2, 'Inputan minimal terdiri dari 2 karakter')
+      .max(150, 'Inputan maksimal terdiri dari 150 karakter'),
     });
 
     await payloadSchema.validate(payload, { abortEarly: false });
-
+    
+    loading.value = true
     axios.post(`/api/v1/pangkat`, payload)
       .then((res) => {
         loading.value = false
@@ -234,6 +234,7 @@ const upsertPayload = async () => {
         })
       })
       .catch((err) => {
+        loading.value = false
         if (err.response) {
           IziToast.errorNotif(err.response.status)
         } else {
