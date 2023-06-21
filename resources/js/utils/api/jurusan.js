@@ -1,6 +1,7 @@
+import axios from 'axios'
 import server from './main'
 
-const baseUrl = process.env.APP_URL
+const baseUrl = 'https://dev.jadwalpintarsmkn2palu.site'
 const endPoint= "api/v1/jurusan/"
 
 export default {
@@ -11,7 +12,7 @@ export default {
   },
 
   upsert(payload) {
-    return server(baseUrl).post(endPoint, payload)
+    return axios.post(`${baseUrl}/${endPoint}`, payload)
   },
 
   getById(id) {
