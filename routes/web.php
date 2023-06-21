@@ -21,3 +21,7 @@ Route::get('/pangkat', function () {
 Route::get('/jadwal', function () {
     return view('page.Jadwal');
 });
+
+Route::get('/guru', function () {
+    return view('page.Guru');
+});
