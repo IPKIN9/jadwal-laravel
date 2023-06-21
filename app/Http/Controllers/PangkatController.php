@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Interfaces\JurusanInterface;
+use App\Interfaces\PangkatInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class JurusanController extends Controller
+class PangkatController extends Controller
 {
-  private JurusanInterface $jurusanRepo;
+  private PangkatInterface $pangkatRepo;
 
-  public function __construct(JurusanInterface $jurusanRepo)
+  public function __construct(PangkatInterface $pangkatRepo)
   {
-    $this->jurusanRepo = $jurusanRepo;
+    $this->pangkatRepo = $pangkatRepo;
   }
 
   public function getAllData(): JsonResponse
@@ -24,33 +24,34 @@ class JurusanController extends Controller
       'orderBy'  => request('orderBy'),
       'sort'  => request('sort'),
     );
-    $data = $this->jurusanRepo->getPayload($meta);
+    $data = $this->pangkatRepo->getPayload($meta);
     return response()->json($data, $data['code']);
   }
 
   public function upsertData(Request $payload): JsonResponse
   {
     $this->validate($payload, [
-      '_jurusan' => 'required|min:2|max:150',
+      '_pangkat' => 'required|min:2|max:150',
     ]);
 
     $id = $payload->id | null;
     $payload = array(
-      '_jurusan' => $payload->_jurusan
+      '_pangkat' => $payload->_pangkat
     );
-    $data = $this->jurusanRepo->insertPayload($id, $payload);
+    $data = $this->pangkatRepo->insertPayload($id, $payload);
     return response()->json($data, $data['code']);
   }
 
+
   public function getById($id): JsonResponse
   {
-    $data = $this->jurusanRepo->getPayloadById($id);
+    $data = $this->pangkatRepo->getPayloadById($id);
     return response()->json($data, $data['code']);
   }
 
   public function deleteData($id): JsonResponse
   {
-    $data = $this->jurusanRepo->deletePayload($id);
+    $data = $this->pangkatRepo->deletePayload($id);
     return response()->json($data, $data['code']);
   }
 }

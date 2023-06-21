@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Interfaces\JurusanInterface;
+use App\Interfaces\MapelInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class JurusanController extends Controller
+class MapelController extends Controller
 {
-  private JurusanInterface $jurusanRepo;
+  private MapelInterface $mapelRepo;
 
-  public function __construct(JurusanInterface $jurusanRepo)
+  public function __construct(MapelInterface $mapelRepo)
   {
-    $this->jurusanRepo = $jurusanRepo;
+    $this->mapelRepo = $mapelRepo;
   }
 
   public function getAllData(): JsonResponse
@@ -24,33 +24,35 @@ class JurusanController extends Controller
       'orderBy'  => request('orderBy'),
       'sort'  => request('sort'),
     );
-    $data = $this->jurusanRepo->getPayload($meta);
+    $data = $this->mapelRepo->getPayload($meta);
     return response()->json($data, $data['code']);
   }
+
+
+  public function getById($id): JsonResponse
+  {
+    $data = $this->mapelRepo->getPayloadById($id);
+    return response()->json($data, $data['code']);
+  }
+
 
   public function upsertData(Request $payload): JsonResponse
   {
     $this->validate($payload, [
-      '_jurusan' => 'required|min:2|max:150',
+      'nama_mapel' => 'required|min:2|max:150',
     ]);
 
     $id = $payload->id | null;
     $payload = array(
-      '_jurusan' => $payload->_jurusan
+      'nama_mapel' => $payload->nama_mapel
     );
-    $data = $this->jurusanRepo->insertPayload($id, $payload);
-    return response()->json($data, $data['code']);
-  }
-
-  public function getById($id): JsonResponse
-  {
-    $data = $this->jurusanRepo->getPayloadById($id);
+    $data = $this->mapelRepo->insertPayload($id, $payload);
     return response()->json($data, $data['code']);
   }
 
   public function deleteData($id): JsonResponse
   {
-    $data = $this->jurusanRepo->deletePayload($id);
+    $data = $this->mapelRepo->deletePayload($id);
     return response()->json($data, $data['code']);
   }
 }
