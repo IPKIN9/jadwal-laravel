@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DetailJadwalController;
+use App\Http\Controllers\GuruController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MapelController;
@@ -45,21 +46,14 @@ Route::prefix('v1/mapel')->controller(MapelController::class)->group(function ()
     Route::delete('/{id}' , 'deleteData' );
 });
 
-Route::prefix('v1/guru')->controller(MapelController::class)->group(function () {
+Route::prefix('v1/guru')->controller(GuruController::class)->group(function () {
     Route::get   ('/'     , 'getAllData' );
     Route::get   ('/{id}' , 'getById'    );
     Route::post  ('/'     , 'upsertData' );
     Route::delete('/{id}' , 'deleteData' );
 });
 
-Route::prefix('v1/jadwal')->controller(MapelController::class)->group(function () {
-    Route::get   ('/'     , 'getAllData' );
-    Route::get   ('/{id}' , 'getById'    );
-    Route::post  ('/'     , 'upsertData' );
-    Route::delete('/{id}' , 'deleteData' );
-});
-
-Route::prefix('v1/detail/jadwal')->controller(MapelController::class)->group(function () {
+Route::prefix('v1/detail/jadwal')->controller(DetailJadwalController::class)->group(function () {
     Route::get   ('/'     , 'getAllData' );
     Route::get   ('/{id}' , 'getById'    );
     Route::post  ('/'     , 'upsertData' );

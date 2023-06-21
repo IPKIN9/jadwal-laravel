@@ -17,3 +17,7 @@ Route::get('/jurusan', function () {
 Route::get('/pangkat', function () {
     return view('page.Pangkat');
 });
+
+Route::get('/jadwal', function () {
+    return view('page.Jadwal');
+});
