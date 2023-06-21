@@ -11,7 +11,7 @@
           <div class="card">
             <div class="card-header">
               <div class="d-flex justify-content-between">
-                <h3>TABEL JURUSAN</h3>
+                <h3>TABEL KELAS</h3>
                 <BaseButton class="btn-primary" @event-click="showHideModal({ type: 'new-data' })">Tambah Data</BaseButton>
               </div>
             </div>
@@ -39,8 +39,10 @@
                     <thead>
                       <tr>
                         <th style="width: 5%;"><a href="#">No.</a></th>
-                        <th style="width: 41.862%;"><a @click="sortingData(meta.sort, '_jurusan')" href="#"
-                            class="dataTable-sorter"><i class="fa-solid me-1" :class="meta.sortIcon._jurusan"></i> Nama</a></th>
+                        <th style="width: 25.862%;"><a @click="sortingData(meta.sort, '_kelas')" href="#"
+                            class="dataTable-sorter"><i class="fa-solid me-1" :class="meta.sortIcon._kelas"></i> Nama</a></th>
+                        <th style="width: 25.862%;"><a @click="sortingData(meta.sort, '_jurusan')" href="#"
+                            class="dataTable-sorter"><i class="fa-solid me-1" :class="meta.sortIcon._jurusan"></i> Jurusan</a></th>
                         <th style="width: 18.8881%;"><a @click="sortingData(meta.sort, 'created_at')" href="#"
                             class="dataTable-sorter"><i class="fa-solid me-1" :class="meta.sortIcon.created_at"></i> Dibuat</a>
                         </th>
@@ -49,16 +51,17 @@
                       </tr>
                     </thead>
                     <TransitionGroup name="table" tag="tbody">
-                      <tr v-for="(jurusan, index) in payloadList" :key="index">
+                      <tr v-for="(kelas, index) in payloadList" :key="index">
                         <td>{{ index + 1 }}.</td>
-                        <td class="text-capitalize">{{ jurusan._jurusan }}</td>
-                        <td>{{ moment(jurusan.created_at).format('DD, MMMM YYYY') }}</td>
-                        <td>{{ moment(jurusan.updated_at).format('DD, MMMM YYYY') }}</td>
+                        <td class="text-capitalize">{{ kelas._kelas }}</td>
+                        <td class="text-capitalize">{{ kelas._jurusan }}</td>
+                        <td>{{ moment(kelas.created_at).format('DD, MMMM YYYY') }}</td>
+                        <td>{{ moment(kelas.updated_at).format('DD, MMMM YYYY') }}</td>
                         <td>
                           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                            <BaseButton :data-id="jurusan.id" :row-data="payloadList[index]" @event-click="editPayload"
+                            <BaseButton :data-id="kelas.id" :row-data="payloadList[index]" @event-click="editPayload"
                               class="btn"><i class="text-primary fas fa-pencil mx-2"></i></BaseButton>
-                            <BaseButton :data-id="jurusan.id" class="btn" @event-click="deletePayload"><i
+                            <BaseButton :data-id="kelas.id" class="btn" @event-click="deletePayload"><i
                                 class="text-danger fas fa-trash mx-2"></i></BaseButton>
                           </div>
                         </td>
@@ -90,10 +93,16 @@
     <template v-slot:body>
       <div class="mx-2">
         <p class="text-muted mt-2 mb-3">Harap periksa formulir anda sebelum dikirim dan disimpan.</p>
-        <div class="form-group mb-3">
-          <BaseInput label="Nama Jurusan" class="mb-2" :required="true" v-model="payload._jurusan" placeholder="Masukan disini..." />
+        <div class="form-group mb-4">
+          <BaseInput label="Nama kelas" :required="true" v-model="payload._kelas" placeholder="Masukan disini..." />
           <small class="text-danger">
-            {{ jurusanError }}
+            {{ kelasError._kelas }}
+          </small>
+        </div>
+        <div class="form-group mb-3">
+          <SelectSearchFixed size="5" @search-event="getJurusanPayload" :required="true" @clear-data="clearJurusan" label="Jurusan" :list="jurusanList" :show-up="jurusanShow" v-model.number="payload.jurusan_id" />
+          <small class="text-danger">
+            {{ kelasError.jurusan_id }}
           </small>
         </div>
       </div>
@@ -104,33 +113,78 @@
     </template>
   </ModalComponent>
 </template>
-<script setup>
-import Sidebar from './child/Sidebar.vue';
-import Footer from './child/Footer.vue'
-import Header from './child/Header.vue'
+<style>
+.v-enter-active {
+  transition: opacity 0.5s ease;
+}
 
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+
+.table-enter-active {
+  transition: all 0.3s ease;
+}
+
+.table-enter-from,
+.table-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.table {
+  overflow: hidden;
+}
+
+.defend-enter-active {
+  transition: all 0.1s ease;
+}
+
+.defend-enter-active{
+  transition-delay: 0.1s;
+}
+
+.defend-enter-from,
+.defend-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.defend {
+  overflow: hidden;
+}
+</style>
+<script setup>
 import { onMounted, reactive, ref } from 'vue'
-import Jurusan from '../utils/api/jurusan'
 import moment from 'moment'
-import Paggination from './child/Paggination.vue'
-import BaseButton from './input/BaseButton.vue'
-import ModalComponent from './child/ModalComponent.vue'
-import IziToast from '../utils/other/izitoast.js'
-import BaseInput from './input/BaseInput.vue'
 import * as Yup from 'yup'
-import Loading from './child/Loading.vue'
-import SweetAlert from '../utils/other/sweetalert'
-import axios from 'axios';
+import Kelas from '../utils/api/kelas';
+import Izitoast from '../utils/other/izitoast';
+import Sidebar from './child/Sidebar.vue';
+import Header from './child/Header.vue';
+import Footer from './child/Footer.vue';
+import ModalComponent from './child/ModalComponent.vue';
+import BaseButton from './input/BaseButton.vue';
+import BaseInput from './input/BaseInput.vue';
+import Loading from './child/Loading.vue';
+import Paggination from './child/Paggination.vue';
+import SelectSearchFixed from './input/SelectSearchFixed.vue'
+import jurusan from '../utils/api/jurusan';
+import sweetalert from '../utils/other/sweetalert';
 
 const loading = ref(false)
-/* Fungsi untuk mengambil data jurusan */
+
+/* Fungsi untuk mengambil data kelas */
 const payloadList = ref()
 
 const meta = reactive({
   sortIcon: {
-    _jurusan  : 'fa-sort'   ,
-    created_at: 'fa-sort-up'
+    _kelas     : 'fa-sort',
+    _jurusan   : 'fa-sort',
+    created_at : 'fa-sort-up'
   },
+  jurusan_id   : 0,
   search       : "",
   limit        : 10,
   page         : 1,
@@ -141,7 +195,7 @@ const meta = reactive({
 })
 
 const getPayloadList = () => {
-  Jurusan.getAll(meta)
+  Kelas.getAll(meta)
     .then((res) => {
       let item           = res.data
       payloadList.value  = item.data
@@ -151,58 +205,59 @@ const getPayloadList = () => {
     })
     .catch((err) => {
       if (err.response) {
-        IziToast.errorNotif(err.response.status)
+        Izitoast.errorNotif(err.response.status)
       } else {
-        IziToast.errorNotif(900)
+        Izitoast.errorNotif(900)
       }
     })
 }
 
-/* Tambah data function */
-
+/* Fungsi untuk menambahkan data */
 const payload = reactive({
-  _jurusan: ''
+  _kelas: '',
+  jurusan_id: 0
 })
 
-const jurusanError = ref('');
+const kelasError = ref('');
 
 const upsertPayload = async () => {
   try {
     const payloadSchema = Yup.object().shape({
-      _jurusan: Yup.string()
-        .required('Inputan harus diisi')
-        .min(2, 'Inputan minimal terdiri dari 2 karakter')
-        .max(150, 'Inputan maksimal terdiri dari 150 karakter'),
+      _kelas: Yup.string()
+      .required('Field harus diisi')
+      .min(2, 'Field minimal terdiri dari 2 karakter')
+      .max(150, 'Field maksimal terdiri dari 150 karakter'),
+      jurusan_id: Yup.number()
+      .required('Field harus diisi'),
     });
-
+    
     await payloadSchema.validate(payload, { abortEarly: false });
-
+    
     loading.value = true
-    axios.post(`/api/v1/jurusan`, payload)
-    // Jurusan.upsert(payload)
+    axios.post(`/api/v1/kelas`, payload)
       .then((res) => {
         loading.value = false
         showHideModal({ type: '' })
-        IziToast.successNotif({
+        Izitoast.successNotif({
           title: 'Tersimpan',
           message: 'Berhasil menyimpan data ke database'
         })
-        console.log(res);
       })
       .catch((err) => {
-        loading.value = false
         if (err.response) {
-          IziToast.errorNotif(err.response.status)
+          Izitoast.errorNotif(err.response.status)
         } else {
-          IziToast.errorNotif(900)
+          Izitoast.errorNotif(900)
         }
-        console.log(err);
       })
 
   } catch (err) {
-    const errorMessages = err.inner.map((error) => error.message);
-
-    jurusanError.value = errorMessages.join(' | ');
+    const errorMessages = err.inner.reduce((errors, error) => {
+      errors[error.path] = error.message;
+      return errors;
+    }, {});
+    loading.value = false
+    kelasError.value = errorMessages;
   }
 }
 
@@ -213,6 +268,9 @@ const editPayload = (params) => {
     if (key === 'created_at' || key === 'updated_at') {
       continue
     }
+    if (key === '_jurusan') {
+      getJurusanPayload(rowData[key])
+    }
     payload[key] = rowData[key]
   }
 
@@ -221,10 +279,10 @@ const editPayload = (params) => {
 
 /* Fungsi untuk menghapus data */
 const deletePayload = (params) => {
-  SweetAlert.confirmNotif(() => {
-    Jurusan.delete(params.dataId)
+  sweetalert.confirmNotif(() => {
+    Kelas.delete(params.dataId)
       .then((res) => {
-        IziToast.successNotif({
+        Izitoast.successNotif({
           title: 'Terhapus',
           message: 'Berhasil menyimpan dihapus'
         })
@@ -235,20 +293,47 @@ const deletePayload = (params) => {
       })
       .catch((err) => {
         if (err.response) {
-          IziToast.errorNotif(err.response.status)
+          Izitoast.errorNotif(err.response.status)
         } else {
-          IziToast.errorNotif(900)
+          Izitoast.errorNotif(900)
         }
       })
   })
 }
 
-const paggination = (data) => {
-  meta.page = data.n_page
-  getPayloadList()
+/* Fungsi untuk mencari data jurusan */
+const jurusanList = ref()
+
+const jurusanShow = {
+  key: 'id',
+  name: '_jurusan'
 }
 
-/* Menampilkan modal */
+const getJurusanPayload = (jurusanPayload) => {
+  jurusan.getAll({
+    search: jurusanPayload,
+    page: 1,
+    limit: 100,
+    orderBy: '_jurusan',
+    sort: 'desc'
+  })
+  .then((res) => {
+    jurusanList.value = res.data.data
+  })
+  .catch((err) => {
+    if (err.response) {
+      Izitoast.errorNotif(err.response.status)
+    } else {
+      Izitoast.errorNotif(900)
+    }
+  })
+}
+
+const clearJurusan = () => {
+  jurusanList.value = []
+}
+
+/* Fungsi menampilkan modal */
 const modalStatus = ref(false)
 const showHideModal = (properties) => {
   if (properties.type === 'new-data') {
@@ -261,35 +346,42 @@ const showHideModal = (properties) => {
   }
 }
 
-/* Sorting data */
+/* Fungsi untuk mengambil page baru berdasarkan paggination */
+const paggination = (data) => {
+  meta.page = data.n_page
+  getPayloadList()
+}
+
+/* Fungsi untuk mengurutkan data dalam tabel */
 const sortingData = (sort, by) => {
+  for (const key in meta.sortIcon) {
+    if (by === (meta.sortIcon)[key]) {
+      continue
+    }
+    (meta.sortIcon)[key] = 'fa-sort'
+  }
 
-if (sort == 'asc') {
-  meta.orderBy = by
-  meta.sort = 'desc'
-  meta.sortIcon[by] = 'fa-sort-up'
-} else if (sort == 'desc') {
-  meta.orderBy = by
-  meta.sort = 'asc'
-  meta.sortIcon[by] = 'fa-sort-down'
-}
+  if (sort == 'asc') {
+    meta.orderBy = by
+    meta.sort = 'desc'
+    meta.sortIcon[by] = 'fa-sort-up'
+  } else if (sort == 'desc') {
+    meta.orderBy = by
+    meta.sort = 'asc'
+    meta.sortIcon[by] = 'fa-sort-down'
+  }
 
-if (by === '_jurusan') {
-  meta.sortIcon.created_at = 'fa-sort'
-} else if (by === 'created_at') {
-  meta.sortIcon._jurusan = 'fa-sort'
-}
-
-getPayloadList()
+  getPayloadList()
 }
 
 /* Fungsi untuk membersihkan daftar payload */
 const clearPayload = () => {
-payload._jurusan = ''
-jurusanError.value = ''
-if ('id' in payload) {
-  delete payload.id
-}
+  payload._kelas = ''
+  kelasError.value = ''
+  jurusanList.value = []
+  if ('id' in payload) {
+    delete payload.id
+  }
 }
 
 onMounted(() => {

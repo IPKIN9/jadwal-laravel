@@ -1,7 +1,7 @@
 import server from './main'
 
 const baseUrl = process.env.VUE_APP_API_URL
-const endPoint= "api/v1/jurusan/"
+const endPoint= "api/v1/kelas/"
 
 export default {
   getAll(params) {
