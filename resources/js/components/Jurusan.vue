@@ -178,7 +178,15 @@ const upsertPayload = async () => {
     await payloadSchema.validate(payload, { abortEarly: false });
 
     loading.value = true
-    axios.post(`/api/v1/jurusan`, payload)
+    axios.create({
+      baseURL: process.env.VUE_APP_API_URL,
+      withCredentials: true,
+      headers: {
+        common: {
+          'Accept': 'application/json',
+        },
+      }
+    }).post(`/api/v1/jurusan`, payload)
     // Jurusan.upsert(payload)
       .then((res) => {
         loading.value = false

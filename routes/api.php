@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DetailJadwalController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\JurusanController;
@@ -11,6 +12,10 @@ use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+Route::prefix('v1/oauth')->controller(AuthController::class)->group(function() {
+    Route::post('/token', 'getToken');
+});
+
 Route::prefix('v1/users')->controller(UserController::class)->group(function () {
     Route::get   ('/'     , 'getAllData' );
     Route::get   ('/{id}' , 'getById'    );
@@ -18,7 +23,7 @@ Route::prefix('v1/users')->controller(UserController::class)->group(function () 
     Route::delete('/{id}' , 'deleteData' );
 });
 
-Route::prefix('v1/jurusan')->controller(JurusanController::class)->group(function () {
+Route::prefix('v1/jurusan')->controller(JurusanController::class)->middleware(['auth:sanctum', 'ability:all-action'])->group(function () {
     Route::get   ('/'     , 'getAllData' );
     Route::get   ('/{id}' , 'getById'    );
     Route::post  ('/'     , 'upsertData' );

@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::get('/login', function () {
+    return view('page.Login');
+})->name('login');
+
 Route::get('/', function () {
     return view('page.Jadwal');
 });
@@ -16,7 +20,7 @@ Route::get('/mapel', function () {
 
 Route::get('/jurusan', function () {
     return view('page.Jurusan');
-});
+})->middleware(['auth:sanctum', 'abilities:all-action']);
 
 Route::get('/pangkat', function () {
     return view('page.Pangkat');

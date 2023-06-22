@@ -8,6 +8,7 @@ import Pangkat from './components/Pangkat'
 import Jadwal from './components/Jadwal'
 import Guru from './components/Guru'
 import Report from './components/Report'
+import Login from './components/Login'
 
 import 'izitoast/dist/css/iziToast.css'
 import 'izitoast/dist/js/iziToast.js'
@@ -21,5 +22,6 @@ app.component('pangkat', Pangkat)
 app.component('jadwal' , Jadwal )
 app.component('guru'   , Guru   )
 app.component('report' , Report )
+app.component('login'  , Login )
 
 app.mount('#app')
