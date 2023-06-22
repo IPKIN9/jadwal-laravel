@@ -59,15 +59,48 @@
       </ul>
     </div>
     <div style="margin-top: 230px;" class="text-center">
-      <BaseButton class="btn-danger rounded">Logout <i class="fas fa-power-off"></i></BaseButton>
+      <BaseButton @event-click="logout" class="btn-danger rounded">Logout <i class="fas fa-power-off"></i></BaseButton>
     </div>
   </div>
 </template>
 
+<style scoped>
+  .sidebar-wrapper{
+    box-shadow: 9px 1px 5px -6px rgba(0,0,0,0.09);
+    -webkit-box-shadow: 9px 1px 5px -6px rgba(0,0,0,0.09);
+    -moz-box-shadow: 9px 1px 5px -6px rgba(0,0,0,0.09);
+  }
+</style>
+
 <script setup>
 import BaseButton from '../input/BaseButton.vue';
+import axios from 'axios';
+import sweetalert from '../../utils/other/sweetalert';
+import authcheck from '../../utils/other/authcheck';
 
 const getCurrentLocation = (route) => {
   return window.location.pathname == route
+}
+
+const clearLocalStorage = () => {
+  axios.get('/api/v1/oauth/revoke', {
+    headers: {
+        Authorization: `Bearer ${authcheck.checkToken()}`,
+    },
+  })
+  .then((res) => {
+    // Membersihkan localStorage
+    localStorage.clear();
+
+    // Membersihkan sessionStorage
+    sessionStorage.clear();
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+}
+
+const logout = () => {
+  sweetalert.confirmLogout(clearLocalStorage)
 }
 </script>

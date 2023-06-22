@@ -172,6 +172,7 @@ import Paggination from './child/Paggination.vue';
 import SelectSearchFixed from './input/SelectSearchFixed.vue'
 import jurusan from '../utils/api/jurusan';
 import sweetalert from '../utils/other/sweetalert';
+import AuthCheck from '../utils/other/authcheck';
 
 const loading = ref(false)
 
@@ -385,7 +386,16 @@ const clearPayload = () => {
   }
 }
 
+const checkToken = () => {
+  let token = AuthCheck.checkToken()
+  if (!token) {
+    window.location.replace('/login')
+  } else {
+    getPayloadList()
+  }
+}
+
 onMounted(() => {
-  getPayloadList()
+  checkToken()
 })
 </script>

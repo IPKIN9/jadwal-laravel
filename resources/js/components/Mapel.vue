@@ -161,6 +161,7 @@ import mapel from '../utils/api/mapel'
 import Footer from './child/Footer.vue';
 import IziToast from '../utils/other/izitoast'
 import SweetAlert from '../utils/other/sweetalert'
+import AuthCheck from '../utils/other/authcheck';
 
 const loading = ref(false)
 
@@ -330,7 +331,16 @@ const clearPayload = () => {
   }
 }
 
+const checkToken = () => {
+  let token = AuthCheck.checkToken()
+  if (!token) {
+    window.location.replace('/login')
+  } else {
+    getPayloadList()
+  }
+}
+
 onMounted(() => {
-  getPayloadList()
+  checkToken()
 })
 </script>

@@ -236,6 +236,7 @@ import IziToast from '../utils/other/izitoast'
 import kelas from '../utils/api/kelas'
 import mapel from '../utils/api/mapel'
 import guru from '../utils/api/guru'
+import AuthCheck from '../utils/other/authcheck';
 
 const loading = ref(false)
 
@@ -619,8 +620,17 @@ const showHideModal = (properties) => {
   }
 }
 
+const checkToken = () => {
+  let token = AuthCheck.checkToken()
+  if (!token) {
+    window.location.replace('/login')
+  } else {
+    getCalendar()
+    getTahun()
+  }
+}
+
 onMounted(() => {
-  getCalendar()
-  getTahun()
+  checkToken()
 })
 </script>

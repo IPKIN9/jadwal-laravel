@@ -47,7 +47,7 @@ class UserManageRepository implements UserManageInterface
 
   public function getRoles($username) {
     try {
-      $data = $this->userModel->where('email', $username)->first(['role']);
+      $data = $this->userModel->where('email', $username)->first(['scope']);
       $payloadList = array(
         'message' => 'success',
         'data'    => $data,

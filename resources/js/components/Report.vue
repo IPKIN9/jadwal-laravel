@@ -56,6 +56,7 @@ import IziToast from '../utils/other/izitoast';
 import jurusan from '../utils/api/jurusan'
 import report from '../utils/api/report'
 import Report from '../utils/other/report';
+import AuthCheck from '../utils/other/authcheck';
 
 /* Fungsi untuk mengambil data jadwal */
 const reportPayload = ref([])
@@ -151,5 +152,16 @@ const clearJurusan = (name) => {
 jurusanName.value = name
 jurusanList.value = []
 }
+
+const checkToken = () => {
+  let token = AuthCheck.checkToken()
+  if (!token) {
+    window.location.replace('/login')
+  }
+}
+
+onMounted(() => {
+  checkToken()
+})
 
 </script>

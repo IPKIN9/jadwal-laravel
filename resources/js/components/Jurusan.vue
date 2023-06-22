@@ -121,6 +121,7 @@ import * as Yup from 'yup'
 import Loading from './child/Loading.vue'
 import SweetAlert from '../utils/other/sweetalert'
 import axios from 'axios';
+import AuthCheck from '../utils/other/authcheck'
 
 const loading = ref(false)
 /* Fungsi untuk mengambil data jurusan */
@@ -178,15 +179,7 @@ const upsertPayload = async () => {
     await payloadSchema.validate(payload, { abortEarly: false });
 
     loading.value = true
-    axios.create({
-      baseURL: process.env.VUE_APP_API_URL,
-      withCredentials: true,
-      headers: {
-        common: {
-          'Accept': 'application/json',
-        },
-      }
-    }).post(`/api/v1/jurusan`, payload)
+    axios.post(`/api/v1/jurusan`, payload)
     // Jurusan.upsert(payload)
       .then((res) => {
         loading.value = false
@@ -300,7 +293,24 @@ if ('id' in payload) {
 }
 }
 
+const checkToken = () => {
+  let token = AuthCheck.checkToken()
+  if (!token) {
+    window.location.replace('/login')
+  } else {
+    getPayloadList()
+  }
+}
+
 onMounted(() => {
+  // checkToken()
   getPayloadList()
+  axios.get('http://127.0.0.1:8000/api/v1/jurusan/?search&limit=10&page=1&orderBy=_jurusan&sort=asc')
+  .then((res) => {
+    console.log(res);
+  })
+  .catch((err) => {
+    console.log(err);
+  })
 })
 </script>
