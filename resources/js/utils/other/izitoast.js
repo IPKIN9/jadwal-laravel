@@ -15,7 +15,8 @@ export default {
     const msg = ErroMsg(code)
     iziToast.error({
       icon: 'fas fa-exclamation',
-      message: msg
+      title: msg.title,
+      message: msg.message,
     });
   },
 }

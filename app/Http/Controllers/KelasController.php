@@ -17,8 +17,8 @@ class KelasController extends Controller
 
   public function getAllData(): JsonResponse
   {
-    $search    = request('search') | '';
-    $jurusanId = request('jurusan_id') | '';
+    $search    = request('search') || '';
+    $jurusanId = request('jurusan_id') | null;
     $meta = array(
       'search'      =>  $search,
       'jurusan_id'  =>  $jurusanId,

@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DetailJadwalController;
+use App\Http\Controllers\GuruController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MapelController;
@@ -9,6 +11,11 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+Route::prefix('v1/oauth')->controller(AuthController::class)->group(function() {
+    Route::post('/token', 'getToken');
+    Route::get('/revoke', 'revokeToken');
+});
 
 Route::prefix('v1/users')->controller(UserController::class)->group(function () {
     Route::get   ('/'     , 'getAllData' );
@@ -45,21 +52,14 @@ Route::prefix('v1/mapel')->controller(MapelController::class)->group(function ()
     Route::delete('/{id}' , 'deleteData' );
 });
 
-Route::prefix('v1/guru')->controller(MapelController::class)->group(function () {
+Route::prefix('v1/guru')->controller(GuruController::class)->group(function () {
     Route::get   ('/'     , 'getAllData' );
     Route::get   ('/{id}' , 'getById'    );
     Route::post  ('/'     , 'upsertData' );
     Route::delete('/{id}' , 'deleteData' );
 });
 
-Route::prefix('v1/jadwal')->controller(MapelController::class)->group(function () {
-    Route::get   ('/'     , 'getAllData' );
-    Route::get   ('/{id}' , 'getById'    );
-    Route::post  ('/'     , 'upsertData' );
-    Route::delete('/{id}' , 'deleteData' );
-});
-
-Route::prefix('v1/detail/jadwal')->controller(MapelController::class)->group(function () {
+Route::prefix('v1/detail/jadwal')->controller(DetailJadwalController::class)->group(function () {
     Route::get   ('/'     , 'getAllData' );
     Route::get   ('/{id}' , 'getById'    );
     Route::post  ('/'     , 'upsertData' );

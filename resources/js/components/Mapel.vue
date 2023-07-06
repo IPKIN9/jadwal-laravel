@@ -11,7 +11,7 @@
           <div class="card">
             <div class="card-header">
               <div class="d-flex justify-content-between">
-                <h3>TABEL JURUSAN</h3>
+                <h3>TABEL MATA PELAJARAN</h3>
                 <BaseButton class="btn-primary" @event-click="showHideModal({ type: 'new-data' })">Tambah Data</BaseButton>
               </div>
             </div>
@@ -39,8 +39,8 @@
                     <thead>
                       <tr>
                         <th style="width: 5%;"><a href="#">No.</a></th>
-                        <th style="width: 41.862%;"><a @click="sortingData(meta.sort, '_jurusan')" href="#"
-                            class="dataTable-sorter"><i class="fa-solid me-1" :class="meta.sortIcon._jurusan"></i> Nama</a></th>
+                        <th style="width: 41.862%;"><a @click="sortingData(meta.sort, 'nama_mapel')" href="#"
+                            class="dataTable-sorter"><i class="fa-solid me-1" :class="meta.sortIcon.nama_mapel"></i> Nama</a></th>
                         <th style="width: 18.8881%;"><a @click="sortingData(meta.sort, 'created_at')" href="#"
                             class="dataTable-sorter"><i class="fa-solid me-1" :class="meta.sortIcon.created_at"></i> Dibuat</a>
                         </th>
@@ -49,16 +49,16 @@
                       </tr>
                     </thead>
                     <TransitionGroup name="table" tag="tbody">
-                      <tr v-for="(jurusan, index) in payloadList" :key="index">
+                      <tr v-for="(mapel, index) in payloadList" :key="index">
                         <td>{{ index + 1 }}.</td>
-                        <td class="text-capitalize">{{ jurusan._jurusan }}</td>
-                        <td>{{ moment(jurusan.created_at).format('DD, MMMM YYYY') }}</td>
-                        <td>{{ moment(jurusan.updated_at).format('DD, MMMM YYYY') }}</td>
+                        <td class="text-capitalize">{{ mapel.nama_mapel }}</td>
+                        <td>{{ moment(mapel.created_at).format('DD, MMMM YYYY') }}</td>
+                        <td>{{ moment(mapel.updated_at).format('DD, MMMM YYYY') }}</td>
                         <td>
                           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                            <BaseButton :data-id="jurusan.id" :row-data="payloadList[index]" @event-click="editPayload"
+                            <BaseButton :data-id="mapel.id" :row-data="payloadList[index]" @event-click="editPayload"
                               class="btn"><i class="text-primary fas fa-pencil mx-2"></i></BaseButton>
-                            <BaseButton :data-id="jurusan.id" class="btn" @event-click="deletePayload"><i
+                            <BaseButton :data-id="mapel.id" class="btn" @event-click="deletePayload"><i
                                 class="text-danger fas fa-trash mx-2"></i></BaseButton>
                           </div>
                         </td>
@@ -91,9 +91,9 @@
       <div class="mx-2">
         <p class="text-muted mt-2 mb-3">Harap periksa formulir anda sebelum dikirim dan disimpan.</p>
         <div class="form-group mb-3">
-          <BaseInput label="Nama Jurusan" class="mb-2" :required="true" v-model="payload._jurusan" placeholder="Masukan disini..." />
+          <BaseInput label="Nama mapel" :required="true" v-model="payload.nama_mapel" placeholder="Masukan disini..." />
           <small class="text-danger">
-            {{ jurusanError }}
+            {{ mapelError }}
           </small>
         </div>
       </div>
@@ -104,32 +104,73 @@
     </template>
   </ModalComponent>
 </template>
-<script setup>
-import Sidebar from './child/Sidebar.vue';
-import Footer from './child/Footer.vue'
-import Header from './child/Header.vue'
+<style>
+.v-enter-active {
+  transition: opacity 0.5s ease;
+}
 
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+
+.table-enter-active {
+  transition: all 0.3s ease;
+}
+
+.table-enter-from,
+.table-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.table {
+  overflow: hidden;
+}
+
+.defend-enter-active {
+  transition: all 0.1s ease;
+}
+
+.defend-enter-active{
+  transition-delay: 0.1s;
+}
+
+.defend-enter-from,
+.defend-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.defend {
+  overflow: hidden;
+}
+</style>
+<script setup>
 import { onMounted, reactive, ref } from 'vue'
-import Jurusan from '../utils/api/jurusan'
 import moment from 'moment'
-import Paggination from './child/Paggination.vue'
-import BaseButton from './input/BaseButton.vue'
-import ModalComponent from './child/ModalComponent.vue'
-import IziToast from '../utils/other/izitoast.js'
-import BaseInput from './input/BaseInput.vue'
 import * as Yup from 'yup'
-import Loading from './child/Loading.vue'
+import Sidebar from './child/Sidebar.vue';
+import Header from './child/Header.vue';
+import BaseButton from './input/BaseButton.vue';
+import Paggination from './child/Paggination.vue';
+import Loading from './child/Loading.vue';
+import ModalComponent from './child/ModalComponent.vue';
+import BaseInput from './input/BaseInput.vue'
+import mapel from '../utils/api/mapel'
+import Footer from './child/Footer.vue';
+import IziToast from '../utils/other/izitoast'
 import SweetAlert from '../utils/other/sweetalert'
-import axios from 'axios';
-import AuthCheck from '../utils/other/authcheck'
+import AuthCheck from '../utils/other/authcheck';
 
 const loading = ref(false)
-/* Fungsi untuk mengambil data jurusan */
+
+/* Fungsi untuk mengambil data mapel */
 const payloadList = ref()
 
 const meta = reactive({
   sortIcon: {
-    _jurusan  : 'fa-sort'   ,
+    nama_mapel  : 'fa-sort'   ,
     created_at: 'fa-sort-up'
   },
   search       : "",
@@ -142,7 +183,7 @@ const meta = reactive({
 })
 
 const getPayloadList = () => {
-  Jurusan.getAll(meta)
+  mapel.getAll(meta)
     .then((res) => {
       let item           = res.data
       payloadList.value  = item.data
@@ -159,28 +200,26 @@ const getPayloadList = () => {
     })
 }
 
-/* Tambah data function */
-
+/* Fungsi untuk menambahkan data */
 const payload = reactive({
-  _jurusan: ''
+  nama_mapel: ''
 })
 
-const jurusanError = ref('');
+const mapelError = ref('');
 
 const upsertPayload = async () => {
   try {
     const payloadSchema = Yup.object().shape({
-      _jurusan: Yup.string()
-        .required('Inputan harus diisi')
-        .min(2, 'Inputan minimal terdiri dari 2 karakter')
-        .max(150, 'Inputan maksimal terdiri dari 150 karakter'),
+      nama_mapel: Yup.string()
+      .required('Inputan harus diisi')
+      .min(2, 'Inputan minimal terdiri dari 2 karakter')
+      .max(150, 'Inputan maksimal terdiri dari 150 karakter'),
     });
-
+    
     await payloadSchema.validate(payload, { abortEarly: false });
-
+    
     loading.value = true
-    axios.post(`/api/v1/jurusan`, payload)
-    // Jurusan.upsert(payload)
+    axios.post(`/api/v1/mapel`, payload)
       .then((res) => {
         loading.value = false
         showHideModal({ type: '' })
@@ -188,7 +227,6 @@ const upsertPayload = async () => {
           title: 'Tersimpan',
           message: 'Berhasil menyimpan data ke database'
         })
-        console.log(res);
       })
       .catch((err) => {
         loading.value = false
@@ -197,13 +235,12 @@ const upsertPayload = async () => {
         } else {
           IziToast.errorNotif(900)
         }
-        console.log(err);
       })
 
   } catch (err) {
     const errorMessages = err.inner.map((error) => error.message);
 
-    jurusanError.value = errorMessages.join(' | ');
+    mapelError.value = errorMessages.join(' | ');
   }
 }
 
@@ -223,7 +260,7 @@ const editPayload = (params) => {
 /* Fungsi untuk menghapus data */
 const deletePayload = (params) => {
   SweetAlert.confirmNotif(() => {
-    Jurusan.delete(params.dataId)
+    mapel.delete(params.dataId)
       .then((res) => {
         IziToast.successNotif({
           title: 'Terhapus',
@@ -244,12 +281,7 @@ const deletePayload = (params) => {
   })
 }
 
-const paggination = (data) => {
-  meta.page = data.n_page
-  getPayloadList()
-}
-
-/* Menampilkan modal */
+/* Fungsi menampilkan modal */
 const modalStatus = ref(false)
 const showHideModal = (properties) => {
   if (properties.type === 'new-data') {
@@ -262,32 +294,38 @@ const showHideModal = (properties) => {
   }
 }
 
-/* Sorting data */
+/* Fungsi untuk mengambil page baru berdasarkan paggination */
+const paggination = (data) => {
+  meta.page = data.n_page
+  getPayloadList()
+}
+
+/* Fungsi untuk mengurutkan data dalam tabel */
 const sortingData = (sort, by) => {
 
-if (sort == 'asc') {
-  meta.orderBy = by
-  meta.sort = 'desc'
-  meta.sortIcon[by] = 'fa-sort-up'
-} else if (sort == 'desc') {
-  meta.orderBy = by
-  meta.sort = 'asc'
-  meta.sortIcon[by] = 'fa-sort-down'
-}
+  if (sort == 'asc') {
+    meta.orderBy = by
+    meta.sort = 'desc'
+    meta.sortIcon[by] = 'fa-sort-up'
+  } else if (sort == 'desc') {
+    meta.orderBy = by
+    meta.sort = 'asc'
+    meta.sortIcon[by] = 'fa-sort-down'
+  }
 
-if (by === '_jurusan') {
-  meta.sortIcon.created_at = 'fa-sort'
-} else if (by === 'created_at') {
-  meta.sortIcon._jurusan = 'fa-sort'
-}
+  if (by === 'nama_mapel') {
+    meta.sortIcon.created_at = 'fa-sort'
+  } else if (by === 'created_at') {
+    meta.sortIcon.nama_mapel = 'fa-sort'
+  }
 
-getPayloadList()
+  getPayloadList()
 }
 
 /* Fungsi untuk membersihkan daftar payload */
 const clearPayload = () => {
-  payload._jurusan = ''
-  jurusanError.value = ''
+  payload.nama_mapel = ''
+  mapelError.value = ''
   if ('id' in payload) {
     delete payload.id
   }
