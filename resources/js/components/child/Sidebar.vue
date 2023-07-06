@@ -101,6 +101,6 @@ const clearLocalStorage = () => {
 }
 
 const logout = () => {
-  sweetalert.confirmLogout(clearLocalStorage)
+  window.location.replace('/logout')
 }
 </script>

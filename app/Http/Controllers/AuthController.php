@@ -14,48 +14,40 @@ class AuthController extends Controller
     {
         $this->userRepo = $userRepo;
     }
-    public function getToken(Request $request)
+
+    public function index ()
     {
-        $credentials = $request->validate([
-            'email'    => ['required', 'email'],
-            'password' => ['required'         ],
-        ]);
-    
-        if (Auth::attempt($credentials)) {
-            $user  = Auth::user();
-            $token = $user->createToken('token-name', [$request->scope])->plainTextToken;
-
-            $scope = $this->userRepo->getRoles($credentials['email']);
-
-            return response()->json(array(
-                'token'   => $token,
-                'scope'   => $scope['data']['scope']
-            ), 200);
+        if (Auth::check()) {
+            return redirect(route('dashboard'));
         } else {
-            return response()->json(array(
-                'message' => 'Username atau password salah',
-                'code'    => 401
-            ), Response::HTTP_UNAUTHORIZED);
+            return view('page.Login');
         }
     }
 
-    public function revokeToken(Request $request)
+    public function getToken(Request $request)
     {
-        try {
-            $user = $request->user();
-            $user->tokens()->delete();
-    
-            $response = [
-                'message' => 'Token berhasil dihapus',
-                'code'    => Response::HTTP_OK       ,
-            ];
-        } catch (\Throwable $th) {
-            $response = [
-                'message' => $th->getMessage(),
-                'code'    => Response::HTTP_INTERNAL_SERVER_ERROR  ,
-            ];
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+ 
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+ 
+            return redirect(route('dashboard'));
         }
-    
-        return response()->json($response, $response['code']);
+ 
+        return back()->with('statusErr', 'Username atau password salah');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect(route('login'))->with('status', 'Berhasil Logout');
     }
 }
