@@ -22,6 +22,5 @@ app.component('pangkat', Pangkat)
 app.component('jadwal' , Jadwal )
 app.component('guru'   , Guru   )
 app.component('report' , Report )
-app.component('login'  , Login )
 
 app.mount('#app')
