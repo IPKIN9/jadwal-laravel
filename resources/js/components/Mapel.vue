@@ -331,16 +331,7 @@ const clearPayload = () => {
   }
 }
 
-const checkToken = () => {
-  let token = AuthCheck.checkToken()
-  if (!token) {
-    window.location.replace('/login')
-  } else {
-    getPayloadList()
-  }
-}
-
 onMounted(() => {
-  checkToken()
+  getPayloadList()
 })
 </script>

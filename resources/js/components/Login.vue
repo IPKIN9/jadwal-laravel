@@ -141,16 +141,4 @@ const getToken = async (csrf) => {
     authError.value = errorMessages;
   }
 }
-
-const setToken = (token, scope) => {
-  localStorage.setItem("users", token)
-  localStorage.setItem("scope", scope)
-  IziToast.successNotif({
-    title  : "Berhasil"           ,
-    message: "Anda berhasil masuk"
-  })
-  setTimeout(() => {
-    window.location.replace("http://127.0.0.1:8000/");
-  }, 100);
-}
 </script>

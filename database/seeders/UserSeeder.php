@@ -10,11 +10,6 @@ use Ramsey\Uuid\Uuid;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         $uuid = Uuid::uuid4()->toString();

@@ -286,31 +286,14 @@ getPayloadList()
 
 /* Fungsi untuk membersihkan daftar payload */
 const clearPayload = () => {
-payload._jurusan = ''
-jurusanError.value = ''
-if ('id' in payload) {
-  delete payload.id
-}
-}
-
-const checkToken = () => {
-  let token = AuthCheck.checkToken()
-  if (!token) {
-    window.location.replace('/login')
-  } else {
-    getPayloadList()
+  payload._jurusan = ''
+  jurusanError.value = ''
+  if ('id' in payload) {
+    delete payload.id
   }
 }
 
 onMounted(() => {
-  // checkToken()
   getPayloadList()
-  axios.get('http://127.0.0.1:8000/api/v1/jurusan/?search&limit=10&page=1&orderBy=_jurusan&sort=asc')
-  .then((res) => {
-    console.log(res);
-  })
-  .catch((err) => {
-    console.log(err);
-  })
 })
 </script>

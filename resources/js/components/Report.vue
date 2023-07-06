@@ -153,15 +153,4 @@ jurusanName.value = name
 jurusanList.value = []
 }
 
-const checkToken = () => {
-  let token = AuthCheck.checkToken()
-  if (!token) {
-    window.location.replace('/login')
-  }
-}
-
-onMounted(() => {
-  checkToken()
-})
-
 </script>

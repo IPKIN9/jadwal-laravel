@@ -620,17 +620,8 @@ const showHideModal = (properties) => {
   }
 }
 
-const checkToken = () => {
-  let token = AuthCheck.checkToken()
-  if (!token) {
-    window.location.replace('/login')
-  } else {
-    getCalendar()
-    getTahun()
-  }
-}
-
 onMounted(() => {
-  checkToken()
+  getCalendar()
+  getTahun()
 })
 </script>
