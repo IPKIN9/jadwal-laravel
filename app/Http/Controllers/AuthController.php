@@ -20,7 +20,7 @@ class AuthController extends Controller
         if (Auth::check()) {
             return redirect(route('dashboard'));
         } else {
-            return view('page.Login');
+            return view('page.LoginPage');
         }
     }
 
