@@ -16,6 +16,34 @@
     <link rel="stylesheet" href="{{asset('assets/css/pages/auth.scoped.css')}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Jadwal Pintar</title>
+		<style>
+			#myIframe{
+				all: unset;
+				position: absolute;
+				top: 15%;
+				right: 10%;
+				width: calc(85% - 50%);
+				height: 85%;
+				border: none;
+				background-color: transparent;
+				mix-blend-mode: multiply;
+			}
+			
+			.title-info{
+				margin-top: 5.5%;
+				margin-left: 5%;
+			}
+			.title-info p{
+				font-size: 21pt;
+				margin-top: 15px;
+			}
+			.title-info h4{
+				margin-top: -15px;
+				font-size: 40pt;
+				text-transform: uppercase;
+				font-weight: 800;
+			}
+		</style>
   </head>
   <body>
     <div id="auth">
@@ -28,24 +56,31 @@
             <h1 class="auth-title">Log in.</h1>
             <p class="auth-subtitle mb-5">Silahkan masukan username dan password.</p>
     
-            <form action="#">
+						@if (session('status'))
+							<div class="text-success">
+								{{ session('status') }}
+							</div>
+						@elseif(session('statusErr'))
+							<div class="text-danger">
+								{{ session('statusErr') }}
+							</div>
+						@endif
+
+            <form action="{{route('login.process')}}" method="POST">
+							@csrf
               <div class="form-group position-relative has-icon-left mb-4">
-                <input v-model="payload.email" type="text" class="form-control form-control-xl" placeholder="Username">
+                <input name="email" type="email" required class="form-control form-control-xl" placeholder="Email">
                 <div class="form-control-icon">
                   <i class="bi bi-person"></i>
                 </div>
-                <small class="text-danger">
-                </small>
               </div>
               <div class="form-group position-relative has-icon-left mb-4">
-                <input v-model="payload.password" type="password" class="form-control form-control-xl" placeholder="Password">
+                <input name="password" type="password" required class="form-control form-control-xl" placeholder="Password">
                 <div class="form-control-icon">
                   <i class="bi bi-shield-lock"></i>
                 </div>
-                <small class="text-danger">
-                </small>
               </div>
-              <button type="button" class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Log in <Loading v-if="loading" /></button>
+              <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Log in</button>
             </form>
           </div>
         </div>
@@ -62,6 +97,5 @@
     </div>
     <script src="{{asset('assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js')}}"></script>
     <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
-    <script src="{{asset('assets/js/main.js')}}"></script>
   </body>
 </html>

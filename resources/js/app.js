@@ -8,7 +8,6 @@ import Pangkat from './components/Pangkat'
 import Jadwal from './components/Jadwal'
 import Guru from './components/Guru'
 import Report from './components/Report'
-import Login from './components/Login'
 
 import 'izitoast/dist/css/iziToast.css'
 import 'izitoast/dist/js/iziToast.js'
