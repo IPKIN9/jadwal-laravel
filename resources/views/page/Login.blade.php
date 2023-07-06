@@ -67,7 +67,7 @@
 						@endif
 
             <form action="{{route('login.process')}}" method="POST">
-							@csrf
+							{{ csrf_field() }}
               <div class="form-group position-relative has-icon-left mb-4">
                 <input name="email" type="email" required class="form-control form-control-xl" placeholder="Email">
                 <div class="form-control-icon">
